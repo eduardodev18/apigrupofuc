@@ -7,7 +7,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-const port = 3000; // Escolha uma porta para sua API
+const port = process.env.PORT || 3001; // Escolha uma porta para sua API
 
 const serviceAccount = require("./apigrupofuc-firebase-adminsdk-fslyg-07935fb606.json");
 
