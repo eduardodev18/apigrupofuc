@@ -72,18 +72,6 @@ app.post("/dados", (req, res) => {
 });
 
 
-app.post("/email", (req, res) => {
-  // Supondo que você recebe os dados em formato JSON no corpo da requisição
-  const newData = {
-    nome: 'carlos',
-    html: '<p>teste</p>'
-  }
-
-  enviarEmail(newData);
-
-});
-
-
 async function enviarEmail(body) {
 
 
