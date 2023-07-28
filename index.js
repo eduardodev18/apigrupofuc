@@ -79,7 +79,7 @@ async function enviarEmail(body) {
       // Construa a mensagem do e-mail
       const email = new SibApiV3Sdk.SendSmtpEmail();
       email.sender = { name: 'ENFUC', email: 'felizesunidosemcristo@gmail.com' };
-      email.to = [{ email: body.email, name: body.nome }];
+      email.to = [{ email: 'felizesunidosemcristo@gmail.com', name: body.nome }];
       email.subject = conteudoEmail.assunto;
       email.textContent = body.html;
       email.htmlContent = body.html;
