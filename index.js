@@ -14,7 +14,7 @@ const serviceAccount = require("./apigrupofuc-firebase-adminsdk-fslyg-07935fb606
 // EMAIL
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const sendinblueApiKey =
-  "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";
+  "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";
 
 const conteudoEmail = {
   assunto: "Inscrição EnFUC 2023",
@@ -67,6 +67,18 @@ app.post("/dados", (req, res) => {
     .catch((error) => {
       res.status(500).json({ error: "Erro ao adicionar dados no Firebase" });
     });
+});
+
+
+app.post("/email", (req, res) => {
+  // Supondo que você recebe os dados em formato JSON no corpo da requisição
+  const newData = {
+    nome: 'carlos',
+    html: '<p>teste</p>'
+  }
+
+  enviarEmail(newData);
+
 });
 
 
