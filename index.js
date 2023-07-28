@@ -18,6 +18,9 @@ const serviceAccount = require("./apigrupofuc-firebase-adminsdk-fslyg-07935fb606
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 const sendinblueApiKey = process.env.SECRET_KEY;
 
+
+
+
 const conteudoEmail = {
   assunto: "Inscrição EnFUC 2023",
   texto: "Olá, Você recebeu uma nova inscrição para o ENFUC",
