@@ -1,6 +1,9 @@
 const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require("express");
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -13,8 +16,7 @@ const serviceAccount = require("./apigrupofuc-firebase-adminsdk-fslyg-07935fb606
 
 // EMAIL
 const SibApiV3Sdk = require("sib-api-v3-sdk");
-const sendinblueApiKey =
-  "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";
+const sendinblueApiKey = process.env.SECRET_KEY;
 
 const conteudoEmail = {
   assunto: "Inscrição EnFUC 2023",
@@ -109,4 +111,4 @@ app.listen(port, () => {
   console.log(`API rodando na porta ${port}`);
 });
 
-// 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
+
