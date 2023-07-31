@@ -2,13 +2,16 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require("express");
 const dotenv = require('dotenv');
-
+const bodyParser = require('body-parser');
+const fs = require('fs')
+const pdf = require('html-pdf');
 
 dotenv.config();
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(bodyParser.json());
 app.use(cors());
 
 const port = process.env.PORT || 3001; // Escolha uma porta para sua API
@@ -74,49 +77,30 @@ app.post("/dados", (req, res) => {
 });
 
 
-app.post('/generate-pdf', async (req, res) => {
-  const { htmlContent } = req.body;
-  const outputPath = './output.pdf';
 
-  try {
-    await generatePDFFromHTML(htmlContent, outputPath);
-    
-    // Lê o arquivo PDF gerado
-    const pdfBuffer = fs.readFileSync(outputPath);
+const generatePDF = (req, res) => {
+  const html = req.body.htmlContent; // Use req.body instead of res.body to access the request body.
 
-    // Define os cabeçalhos para permitir o download do PDF
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=generated.pdf');
+  const options = {
+    type: 'pdf',
+    format: 'A4',
+    orientation: 'portrait'
+  };
 
-    // Envia o conteúdo do PDF como resposta
-    res.send(pdfBuffer);
+  pdf.create(html, options).toBuffer((err, buffer) => {
+    if (err) return res.status(500).json({ error: "Error generating PDF", message: err }); // Return an error response in case of an error.
 
-    // Deleta o arquivo PDF gerado
-    fs.unlinkSync(outputPath);
+    // Set the response headers to download the PDF as an attachment.
+    res.set({
+      'Content-Disposition': 'attachment; filename="generated.pdf"',
+      'Content-Type': 'application/pdf',
+    });
 
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Erro ao gerar o PDF', error: error.message });
-  }
-});
+    res.end(buffer); // Send the PDF buffer in the response.
+  });
+};
 
-
-async function generatePDFFromHTML(htmlContent, outputPath) {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  
-  // Define o conteúdo HTML da página
-  await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
-
-  // Espera por um pequeno período de tempo (opcional) para garantir que o conteúdo seja carregado completamente.
-  // Ajuste este valor de acordo com suas necessidades.
-  await page.waitForTimeout(1000);
-
-  // Gera o PDF com o conteúdo HTML
-  await page.pdf({ path: outputPath, format: 'A4' });
-
-  await browser.close();
-  console.log('PDF gerado com sucesso!');
-}
+app.post('/generate-pdf', generatePDF);
 
 
 
