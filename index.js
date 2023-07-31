@@ -2,8 +2,7 @@ const admin = require("firebase-admin");
 const cors = require('cors');
 const express = require("express");
 const dotenv = require('dotenv');
-const puppeteer = require('puppeteer');
-const fs = require('fs');
+
 
 dotenv.config();
 
@@ -119,31 +118,6 @@ async function generatePDFFromHTML(htmlContent, outputPath) {
   console.log('PDF gerado com sucesso!');
 }
 
-
-app.post('/generate-pdf', async (req, res) => {
-  const { htmlContent } = req.body;
-  const outputPath = './output.pdf';
-
-  try {
-    await generatePDFFromHTML(htmlContent, outputPath);
-    
-    // Lê o arquivo PDF gerado
-    const pdfBuffer = fs.readFileSync(outputPath);
-
-    // Define os cabeçalhos para permitir o download do PDF
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=generated.pdf');
-
-    // Envia o conteúdo do PDF como resposta
-    res.send(pdfBuffer);
-
-    // Deleta o arquivo PDF gerado
-    fs.unlinkSync(outputPath);
-
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Erro ao gerar o PDF', error: error.message });
-  }
-});
 
 
 
